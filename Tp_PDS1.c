@@ -101,6 +101,11 @@ int lerPokemons(FILE *arq, treinador *treinadorA, treinador *treinadorB)
         printf("Num pokemons:\nTreinador A: %d\nTreinador B: %d\n", treinadorA->num_pokemons, treinadorB->num_pokemons);
         return 1;
     }
+    else if (treinadorA->num_pokemons > 100 || treinadorB->num_pokemons > 100)
+    {
+        printf("Num pokemons:\nTreinador A: %d\nTreinador B: %d\n", treinadorA->num_pokemons, treinadorB->num_pokemons);
+        return 2;
+    }
     treinadorA->num_pokemons_vivos = treinadorA->num_pokemons;
     treinadorB->num_pokemons_vivos = treinadorB->num_pokemons;
     for (int i = 0; i < treinadorA->num_pokemons + treinadorB->num_pokemons; i++) // separa os dados de cada pokemon
@@ -112,7 +117,7 @@ int lerPokemons(FILE *arq, treinador *treinadorA, treinador *treinadorB)
             if (sscanf(linha_buffer, "%s %d %d %f %s", treinadorA->cartel_pokemon[i].nome, &treinadorA->cartel_pokemon[i].ataque, &treinadorA->cartel_pokemon[i].defesa, &treinadorA->cartel_pokemon[i].vida, treinadorA->cartel_pokemon[i].tipo) != 5)
             {
                 printf("%s", linha_buffer);
-                return 2;
+                return 3;
             }
         } 
         else 
@@ -120,7 +125,7 @@ int lerPokemons(FILE *arq, treinador *treinadorA, treinador *treinadorB)
             if (sscanf(linha_buffer, "%s %d %d %f %s", treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].nome, &treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].ataque, &treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].defesa, &treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].vida, treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].tipo) != 5)
             {
                 printf("%s", linha_buffer);
-                return 2;
+                return 3;
             }
         }
     }
@@ -190,10 +195,14 @@ int main()
         printf("Erro! Os Treinadores precisam ter no minimo 1 pokemon!\n");
         return 2;
     case 2:
-        printf("Erro! Os pokemons precisam ter 5 caracteristicas (Nome, ataque, defesa, vida e tipo)\n");
+        printf("Erro! Os Treinadores precisam ter no maximo 100 pokemons!\n");
         return 3;
+    case 3:
+        printf("Erro! Os pokemons precisam ter 5 caracteristicas (Nome, ataque, defesa, vida e tipo)\n");
+        return 4;
     default:
         break;
+        
     }
     int pok_A_index = 0, pok_B_index = 0;
     //BATALHAAAA!
@@ -204,7 +213,7 @@ int main()
          //Pokemon do treinador A ataca o do B
         if (treinadorB.cartel_pokemon[pok_B_index].vida <= 0)   //verifica se o pokemon do A venceu.
         {
-            printf("%s venceu %s\n", treinadorA.cartel_pokemon[pok_A_index].nome,treinadorB.cartel_pokemon[pok_B_index].nome);
+            printf("%s venceu %s\n", treinadorA.cartel_pokemon[pok_A_index].nome, treinadorB.cartel_pokemon[pok_B_index].nome);
             treinadorB.num_pokemons_vivos--;
             pok_B_index++;
         }
@@ -217,7 +226,7 @@ int main()
         if (pokebatalha(treinadorB.cartel_pokemon, pok_B_index, treinadorA.cartel_pokemon, pok_A_index) == 1) return 4; //erro, algum dos pokemons não pertence a nenhum tipo pré-estabelecido.
         if (treinadorA.cartel_pokemon[pok_A_index].vida <= 0) //verifica se o pokemon do B venceu.
         {
-            printf("%s venceu %s\n", treinadorB.cartel_pokemon[pok_B_index].nome,treinadorA.cartel_pokemon[pok_A_index].nome);
+            printf("%s venceu %s\n", treinadorB.cartel_pokemon[pok_B_index].nome, treinadorA.cartel_pokemon[pok_A_index].nome);
             treinadorA.num_pokemons_vivos--;
             pok_A_index++;
         }
