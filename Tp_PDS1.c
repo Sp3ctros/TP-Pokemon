@@ -35,6 +35,8 @@ int converterTipo(char*tipo)
 {
     switch(tolower(tipo[0]))
     {
+        case 'a':
+            return AGUA;
         case 'e':
             return ELETRICO;
         case 'f':
@@ -44,17 +46,23 @@ int converterTipo(char*tipo)
         case 'p':
             return PEDRA;
         default:
-            return AGUA; // Erro! Pokemon nao pertence a nenhum tipo pré estabelecido.
+            return 0; // Erro! Pokemon nao pertence a nenhum tipo pré estabelecido.
     }
 }
 
 // Função de batalha entre dois Pokémons (A ataca B)
-void pokebatalha(struct pokemon *atacante, int index_A, struct pokemon *defensor, int index_B)
-{
+int pokebatalha(struct pokemon *atacante, int index_A, struct pokemon *defensor, int index_B)
+{   int tipo_atacante = converterTipo(atacante[index_A].tipo);
+    int tipo_defensor = converterTipo(defensor[index_B].tipo);
+    if (tipo_atacante == 0 || tipo_defensor == 0)
+    {
+        printf("\033[H\033[J");
+        printf("Erro! Pokemon nao pertence a nenhum tipo pre estabelecido.\n");
+        return 1; //erro no tipo
+    }
     int power_relation = converterTipo(atacante[index_A].tipo) - converterTipo(defensor[index_B].tipo); 
     float ataque_atacante = atacante[index_A].ataque;
     float defesa_defensor = defensor[index_B].defesa;
-
     switch (power_relation)
     {
     case -1:
@@ -74,13 +82,12 @@ void pokebatalha(struct pokemon *atacante, int index_A, struct pokemon *defensor
     if (ataque_atacante > defesa_defensor)
     {
         defensor[index_B].vida -= (ataque_atacante - defesa_defensor);
-
     }
     else
     {
         defensor[index_B].vida--;
-
     }
+    return 0;
 }
 
 
@@ -188,13 +195,13 @@ int main()
     default:
         break;
     }
-
     int pok_A_index = 0, pok_B_index = 0;
     //BATALHAAAA!
     while (treinadorA.num_pokemons_vivos > 0 && treinadorB.num_pokemons_vivos > 0)
     {
         // A ataca B
-        pokebatalha(treinadorA.cartel_pokemon, pok_A_index, treinadorB.cartel_pokemon, pok_B_index); //Pokemon do treinador A ataca o do B
+        if (pokebatalha(treinadorA.cartel_pokemon, pok_A_index, treinadorB.cartel_pokemon, pok_B_index) == 1) return 4; //erro, algum dos pokemons nao pertence a nenhum tipo pré-estabelecido.
+         //Pokemon do treinador A ataca o do B
         if (treinadorB.cartel_pokemon[pok_B_index].vida <= 0)   //verifica se o pokemon do A venceu.
         {
             printf("%s venceu %s\n", treinadorA.cartel_pokemon[pok_A_index].nome,treinadorB.cartel_pokemon[pok_B_index].nome);
@@ -207,7 +214,7 @@ int main()
             break;
         }
         // B ataca A.
-        pokebatalha(treinadorB.cartel_pokemon, pok_B_index, treinadorA.cartel_pokemon, pok_A_index);
+        if (pokebatalha(treinadorB.cartel_pokemon, pok_B_index, treinadorA.cartel_pokemon, pok_A_index) == 1) return 4; //erro, algum dos pokemons não pertence a nenhum tipo pré-estabelecido.
         if (treinadorA.cartel_pokemon[pok_A_index].vida <= 0) //verifica se o pokemon do B venceu.
         {
             printf("%s venceu %s\n", treinadorB.cartel_pokemon[pok_B_index].nome,treinadorA.cartel_pokemon[pok_A_index].nome);
