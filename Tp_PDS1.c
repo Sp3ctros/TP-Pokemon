@@ -54,16 +54,23 @@ void pokebatalha(struct pokemon *atacante, int index_A, struct pokemon *defensor
     int power_relation = converterTipo(atacante[index_A].tipo) - converterTipo(defensor[index_B].tipo); 
     float ataque_atacante = atacante[index_A].ataque;
     float defesa_defensor = defensor[index_B].defesa;
-    if (power_relation == -1 || power_relation == 4)
-    {
-        ataque_atacante *= Bonus_ataque;
-    }
-    else if (power_relation == 1 || power_relation == -4)
-    {
-        ataque_atacante *= Debuff_ataque;
-        
-    }
 
+    switch (power_relation)
+    {
+    case -1:
+        ataque_atacante *= Bonus_ataque;
+        break;
+    case 1:
+        ataque_atacante *= Debuff_ataque;
+        break;
+    case 4:
+        ataque_atacante *= Bonus_ataque;
+        break;
+    case -4:
+        ataque_atacante *= Debuff_ataque;
+    default:
+        break;
+    }
     if (ataque_atacante > defesa_defensor)
     {
         defensor[index_B].vida -= (ataque_atacante - defesa_defensor);
@@ -163,8 +170,9 @@ int main()
 {
     treinador treinadorA, treinadorB;
     FILE *arq; 
-    arq = fopen("text.txt", "r");     //abre o arquivo
-    if (arq == NULL) {
+    arq = fopen("text.txt", "r"); 
+    if (arq == NULL) 
+    {
         printf("Erro ao abrir arquivo!\n");
         return 1; 
     }
