@@ -8,6 +8,8 @@
 #define Debuff_ataque 0.8f
 
 
+
+
 // tipos de pokemons como constantes para o calculo de batalha
 enum TipoPokemon { ELETRICO = 1, AGUA = 2, FOGO = 3, GELO = 4, PEDRA = 5};
 
@@ -193,6 +195,48 @@ void mostrar_derrotados(treinador *treinadorA, treinador *treinadorB)
     }
 }
 
+void mostrar_dados(treinador *treinadorA, treinador *treinadorB)
+{
+    printf("------------------------------------------------ DADOS DOS POKEMONS -----------------------------------------------------------------------------------------------------------\n");
+    printf("%40s %60s\n", "Treinador A","Treinador B");
+    printf("%40s:%4d %60s:%4d\n", "Numeros de pokemons", treinadorA->num_pokemons, "Numeros de pokemons",treinadorB->num_pokemons);
+    printf("%-20s %-6s %-6s %-6s %38s %-20s %-6s %-6s %-6s\n", 
+           "Nome", "Ataque", "Defesa", "Vida", "", "Nome", "Ataque", "Defesa", "Vida");
+
+    int max_pokemons = (treinadorA->num_pokemons > treinadorB->num_pokemons) ? treinadorA->num_pokemons  : treinadorB->num_pokemons;
+
+    for (int i = 0; i < max_pokemons; i++)
+    {
+        if (i < treinadorA->num_pokemons)
+        {
+            printf("%-20s %-6d %-6d %-6.0f", 
+                   treinadorA->cartel_pokemon[i].nome,
+                   treinadorA->cartel_pokemon[i].ataque, 
+                   treinadorA->cartel_pokemon[i].defesa,
+                   treinadorA->cartel_pokemon[i].vida);
+        }
+        else
+        {
+            printf("%-20s %-6s %-6s %-6s", "", "", "", "");
+        }
+
+        printf("%40s", "");
+
+        if (i < treinadorB->num_pokemons)
+        {
+            printf("%-20s %-6d %-6d %-6.0f", 
+                   treinadorB->cartel_pokemon[i].nome, 
+                   treinadorB->cartel_pokemon[i].ataque, 
+                   treinadorB->cartel_pokemon[i].defesa,
+                   treinadorB->cartel_pokemon[i].vida);
+        }
+
+        printf("\n");
+    }
+    printf("------------------------------------------------------------------------------------------------------------------------------------------------------------\n");
+}
+
+
 int main() 
 {
     treinador treinadorA, treinadorB;
@@ -221,6 +265,7 @@ int main()
     }
     int pok_A_index = 0, pok_B_index = 0;
     //BATALHAAAA!
+    mostrar_dados(&treinadorA, &treinadorB);
     if (pokebatalha(&treinadorA, pok_A_index, &treinadorB, pok_B_index) == 1) return 4;
     printf(treinadorA.num_pokemons_vivos == 0 ? "Jogador 2 venceu\n": "Jogador 1 venceu\n");
     mostrar_sobreviventes(&treinadorA, &treinadorB);
