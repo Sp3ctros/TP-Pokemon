@@ -45,7 +45,7 @@ typedef struct
 
 //escolhe a cor do pokemon baseado no tipo
 void escolher_cor(char* cor, const char* tipo) {
-    switch (tolower(tipo[0])) 
+    switch (tolower(tipo[0]))
     {
         case 'a':
             strcpy(cor, AGUA_COR);
@@ -70,7 +70,7 @@ void escolher_cor(char* cor, const char* tipo) {
 
 
 // Função para ler pokémons de um arquivo e separar no vetor treinador A e B
-int lerPokemons(FILE *arq, treinador *treinadorA, treinador *treinadorB) 
+int lerPokemons(FILE *arq, treinador *treinadorA, treinador *treinadorB)
 {
     char linha_buffer[MAX_STRING_LEN];
     fscanf(arq, "%d %d\n", &treinadorA->num_pokemons, &treinadorB->num_pokemons); // Pega o numero de pokemons de cada treinador
@@ -89,8 +89,8 @@ int lerPokemons(FILE *arq, treinador *treinadorA, treinador *treinadorB)
     for (int i = 0; i < treinadorA->num_pokemons + treinadorB->num_pokemons; i++) // separa os dados de cada pokemon
     {
         fgets(linha_buffer, MAX_STRING_LEN, arq);
-        if (i < treinadorA->num_pokemons) 
-        { 
+        if (i < treinadorA->num_pokemons)
+        {
             //separa os dados do pokemon e verifica se ele tem 5 caracteristicas.
             if (sscanf(linha_buffer, "%s %d %d %f %s", treinadorA->cartel_pokemon[i].nome, &treinadorA->cartel_pokemon[i].ataque, &treinadorA->cartel_pokemon[i].defesa, &treinadorA->cartel_pokemon[i].vida, treinadorA->cartel_pokemon[i].tipo) != 5)
             {
@@ -99,7 +99,7 @@ int lerPokemons(FILE *arq, treinador *treinadorA, treinador *treinadorB)
             }
             escolher_cor(treinadorA->cartel_pokemon[i].cor, treinadorA->cartel_pokemon[i].tipo);
         }
-        else 
+        else
         {
             if (sscanf(linha_buffer, "%s %d %d %f %s", treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].nome, &treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].ataque, &treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].defesa, &treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].vida, treinadorB->cartel_pokemon[i - treinadorA->num_pokemons].tipo) != 5)
             {
@@ -117,11 +117,13 @@ int lerPokemons(FILE *arq, treinador *treinadorA, treinador *treinadorB)
 
 void mostrar_dados(treinador *treinadorA, treinador *treinadorB)
 {
-    printf(BALD"------------------------------------------------ DADOS DOS POKEMONS -----------------------------------------------------------------------------------------------------------\n");
-    printf("%40s %60s\n", "Treinador A","Treinador B");
-    printf("%40s:%4d %60s:%4d\n", "Numeros de pokemons", treinadorA->num_pokemons, "Numeros de pokemons",treinadorB->num_pokemons);
-    printf("%-20s %-6s %-6s %-6s %38s %-20s %-6s %-6s %-6s\n", 
-           "Nome", "Ataque", "Defesa", "Vida", "", "Nome", "Ataque", "Defesa", "Vida"RESET);
+    printf(BALD"------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("------------------------------------------------------------INFORMACOES DOS TREINADORES---------------------------------------------------------\n");
+    printf("------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("%40s %80s\n", "Treinador A","Treinador B");
+    printf("%40s:%4d %80s:%4d\n", "Numeros de pokemons", treinadorA->num_pokemons, "Numeros de pokemons",treinadorB->num_pokemons);
+    printf("%-20s %-6s %-6s %-6s %-6s %52s %-20s %-6s %-6s %-6s %-6s\n",
+           "Nome", "Ataque", "Defesa", "Vida", "Tipo","", "Nome", "Ataque", "Defesa", "Vida", "Tipo" RESET);
 
     int max_pokemons = (treinadorA->num_pokemons > treinadorB->num_pokemons) ? treinadorA->num_pokemons  : treinadorB->num_pokemons;
 
@@ -129,12 +131,13 @@ void mostrar_dados(treinador *treinadorA, treinador *treinadorB)
     {
         if (i < treinadorA->num_pokemons)
         {
-            printf("%s%-20s %-6d %-6d %-6.0f"RESET,
+            printf("%s%-20s %-6d %-6d %-6.0f %-20s"RESET,
                    treinadorA->cartel_pokemon[i].cor,
                    treinadorA->cartel_pokemon[i].nome,
-                   treinadorA->cartel_pokemon[i].ataque, 
+                   treinadorA->cartel_pokemon[i].ataque,
                    treinadorA->cartel_pokemon[i].defesa,
-                   treinadorA->cartel_pokemon[i].vida);
+                   treinadorA->cartel_pokemon[i].vida,
+                   treinadorA->cartel_pokemon[i].tipo);
         }
         else
         {
@@ -145,17 +148,21 @@ void mostrar_dados(treinador *treinadorA, treinador *treinadorB)
 
         if (i < treinadorB->num_pokemons)
         {
-            printf("%s%-20s %-6d %-6d %-6.0f"RESET, 
+            printf("%s%-20s %-6d %-6d %-6.0f %-20s"RESET,
                    treinadorB->cartel_pokemon[i].cor,
-                   treinadorB->cartel_pokemon[i].nome, 
-                   treinadorB->cartel_pokemon[i].ataque, 
+                   treinadorB->cartel_pokemon[i].nome,
+                   treinadorB->cartel_pokemon[i].ataque,
                    treinadorB->cartel_pokemon[i].defesa,
-                   treinadorB->cartel_pokemon[i].vida);
+                   treinadorB->cartel_pokemon[i].vida,
+                   treinadorA->cartel_pokemon[i].tipo);
         }
 
         printf("\n");
     }
-    printf(BALD"------------------------------------------------------------------------------------------------------------------------------------------------------------\n"RESET);
+    printf(BALD"------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("--------------------------------------------------------------INFORMACOES DA BATALHA------------------------------------------------------------\n");
+    printf("------------------------------------------------------------------------------------------------------------------------------------------------\n"RESET);
+
 }
 
 // converter o tipo de pokemon para valor numérico
@@ -188,7 +195,7 @@ int pokebatalha(treinador *atacante, int index_A, treinador *defensor, int index
         printf("Erro! Pokemon nao pertence a nenhum tipo pre estabelecido.\n");
         return 1; //erro no tipo
     }
-    int power_relation = converterTipo(atacante->cartel_pokemon[index_A].tipo) - converterTipo(defensor->cartel_pokemon[index_B].tipo); 
+    int power_relation = converterTipo(atacante->cartel_pokemon[index_A].tipo) - converterTipo(defensor->cartel_pokemon[index_B].tipo);
     float ataque_atacante = atacante->cartel_pokemon[index_A].ataque;
     float defesa_defensor = defensor->cartel_pokemon[index_B].defesa;
     switch (power_relation)
@@ -226,7 +233,7 @@ int pokebatalha(treinador *atacante, int index_A, treinador *defensor, int index
             return 0;
         }
         index_B++;
-        
+
     }
     pokebatalha(defensor, index_B, atacante, index_A);
     return 0;
@@ -238,7 +245,7 @@ int pokebatalha(treinador *atacante, int index_A, treinador *defensor, int index
 // Mostra todos pokemons que nao foram derrotados
 void mostrar_sobreviventes(treinador *treinadorA, treinador *treinadorB)
 {
-    printf("Pokemons sobreviventes: \n");
+    printf(BALD"Pokemons sobreviventes: \n"RESET);
     for(int i = 0; i < treinadorA->num_pokemons + treinadorB->num_pokemons; i++)
     {
         if (i < treinadorA->num_pokemons)
@@ -262,7 +269,7 @@ void mostrar_sobreviventes(treinador *treinadorA, treinador *treinadorB)
 // Mostra todos pokemons que foram derrotados
 void mostrar_derrotados(treinador *treinadorA, treinador *treinadorB)
 {
-    printf(BALD"\n\nPokemons derrotados: \n"RESET);
+    printf(BALD"Pokemons derrotados: \n"RESET);
     for(int i = 0; i < treinadorA->num_pokemons + treinadorB->num_pokemons; i++)
     {
         if (i < treinadorA->num_pokemons)
@@ -285,15 +292,15 @@ void mostrar_derrotados(treinador *treinadorA, treinador *treinadorB)
 
 
 
-int main() 
+int main()
 {
     treinador treinadorA, treinadorB;
-    FILE *arq; 
-    arq = fopen("text.txt", "r"); 
-    if (arq == NULL) 
+    FILE *arq;
+    arq = fopen("text.txt", "r");
+    if (arq == NULL)
     {
         printf("Erro ao abrir arquivo!\n");
-        return 1; 
+        return 1;
     }
     //separa os dados dos pokemons e dos treinadores e verifica os cenarios de erro
     switch (lerPokemons(arq, &treinadorA, &treinadorB))
@@ -309,15 +316,20 @@ int main()
         return 4;
     default:
         break;
-        
+
     }
     int pok_A_index = 0, pok_B_index = 0;
     //BATALHAAAA!
     mostrar_dados(&treinadorA, &treinadorB);
     if (pokebatalha(&treinadorA, pok_A_index, &treinadorB, pok_B_index) == 1) return 4;
-    printf( treinadorA.num_pokemons_vivos == 0 ? BALD"\n\nJogador 2 venceu\n\n"RESET: BALD"\n\nJogador 1 venceu\n\n"RESET);
+    printf(BALD"------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("--------------------------------------------------------------------RESULTADO-------------------------------------------------------------------\n");
+    printf("------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf(treinadorA.num_pokemons_vivos == 0 ? ROXO"Jogador 2 venceu\n"RESET: ROXO"Jogador 1 venceu\n"RESET);
     mostrar_sobreviventes(&treinadorA, &treinadorB);
     mostrar_derrotados(&treinadorA, &treinadorB);
-    printf("\n");
+    printf(BALD"------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("------------------------------------------------------------------------------------------------------------------------------------------------\n");
+    printf("------------------------------------------------------------------------------------------------------------------------------------------------\n"RESET);
     return 0;
 }
