@@ -44,7 +44,8 @@ typedef struct
 } treinador;
 
 //escolhe a cor do pokemon baseado no tipo
-void escolher_cor(char* cor, const char* tipo) {
+void escolher_cor(char* cor, const char* tipo) 
+{
     switch (tolower(tipo[0]))
     {
         case 'a':
@@ -192,7 +193,7 @@ int pokebatalha(treinador *atacante, int index_A, treinador *defensor, int index
     if (tipo_atacante == 0 || tipo_defensor == 0)
     {
         printf("\033[H\033[J");
-        printf("Erro! Pokemon nao pertence a nenhum tipo pre estabelecido.\n");
+        printf("Erro! Pokemon nao pertence a nenhum tipo pre estabelecido. [FOGO, AGUA, GELO, ELETRICO, PEDRA]\n");
         return 1; //erro no tipo
     }
     int power_relation = converterTipo(atacante->cartel_pokemon[index_A].tipo) - converterTipo(defensor->cartel_pokemon[index_B].tipo);
@@ -214,7 +215,6 @@ int pokebatalha(treinador *atacante, int index_A, treinador *defensor, int index
     default:
         break;
     }
-
     if (ataque_atacante > defesa_defensor)
     {
         defensor->cartel_pokemon[index_B].vida -= (ataque_atacante - defesa_defensor);
@@ -235,7 +235,10 @@ int pokebatalha(treinador *atacante, int index_A, treinador *defensor, int index
         index_B++;
 
     }
-    pokebatalha(defensor, index_B, atacante, index_A);
+    if (pokebatalha(defensor, index_B, atacante, index_A) == 1)
+    {
+        return 1;
+    }
     return 0;
 }
 
