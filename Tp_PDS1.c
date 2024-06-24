@@ -7,6 +7,8 @@
 #define Bonus_ataque 1.2f
 #define Debuff_ataque 0.8f
 
+#define Nome_arquivo "text.txt"
+
 // Cores 
 #define RESET "\033[0m"
 #define FOGO_COR "\033[31m"
@@ -186,7 +188,7 @@ int converterTipo(char*tipo)
     }
 }
 
-// Função de batalha entre treinadores
+// Função recursiva de batalha entre treinadores
 int pokebatalha(treinador *atacante, int index_A, treinador *defensor, int index_B)
 {   int tipo_atacante = converterTipo(atacante->cartel_pokemon[index_A].tipo);
     int tipo_defensor = converterTipo(defensor->cartel_pokemon[index_B].tipo);
@@ -299,7 +301,7 @@ int main()
 {
     treinador treinadorA, treinadorB;
     FILE *arq;
-    arq = fopen("text.txt", "r");
+    arq = fopen(Nome_arquivo, "r");
     if (arq == NULL)
     {
         printf("Erro ao abrir arquivo!\n");
